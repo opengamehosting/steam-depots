@@ -42,6 +42,5 @@ jobs:
           force: false
       - id: depot
         run: >
-          echo "steamAppId=$(cat depots.json | jq -rcM '.${{ matrix.game
-          }}.steamAppId' | tr -d '\n\r')" >> $GITHUB_OUTPUT
+          echo "steamAppId=$(cat depots.json | jq -rcM '.${{ matrix.game }}.steamAppId' | tr -d '\n\r')" >> $GITHUB_OUTPUT
       - run: echo "${{ steps.depot.steamAppId }}"
