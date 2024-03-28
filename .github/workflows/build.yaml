@@ -81,7 +81,7 @@ jobs:
             maManifest=maFiles/manifest.json
           context: .
           file: ./Dockerfile
-          push: ${{ github.event_name == 'push' && contains(github.ref, 'refs/tags/') }}
+          push: ${{ github.event_name == 'push' }}
           #tags: ${{ steps.meta.outputs.tags }}
-          tags: latest, ${{ matrix.game }}-${{ steps.depot.outputs.depotId }}-${{ steps.depot.outputs.manifestId }}
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ matrix.game }}-latest, ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ matrix.game }}-${{ steps.depot.outputs.depotId }}-${{ steps.depot.outputs.manifestId }}
           labels: ${{ steps.meta.outputs.labels }}
