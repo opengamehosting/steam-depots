@@ -28,8 +28,8 @@ jobs:
     runs-on: self-hosted
     strategy:
       matrix:
-        game:
-          - valheim
+        depotId:
+          - 896661
       fail-fast: false
       max-parallel: 1
     permissions:
@@ -45,10 +45,11 @@ jobs:
           force: false
       - id: depot
         run: |
-          echo "steamAppId=$(cat depots.json | jq -rcM '.${{ matrix.game }}.steamAppId' | tr -d '\n\r')" >> $GITHUB_OUTPUT
-          echo "depotId=$(cat depots.json | jq -rcM '.${{ matrix.game }}.depotId' | tr -d '\n\r')" >> $GITHUB_OUTPUT
-          echo "manifest=$(cat depots.json | jq -rcM '.${{ matrix.game }}.manifest' | tr -d '\n\r')" >> $GITHUB_OUTPUT
-          echo "manifestId=$(cat depots.json | jq -rcM '.${{ matrix.game }}.manifestId' | tr -d '\n\r')" >> $GITHUB_OUTPUT
+          echo "game=$(cat depots.json | jq -rcM '.${{ matrix.depotId }}.game' | tr -d '\n\r')" >> $GITHUB_OUTPUT
+          echo "manifest=$(cat depots.json | jq -rcM '.${{ matrix.depotId }}.manifest' | tr -d '\n\r')" >> $GITHUB_OUTPUT
+          echo "manifestName=$(cat depots.json | jq -rcM '.${{ matrix.depotId }}.name' | tr -d '\n\r')" >> $GITHUB_OUTPUT
+          echo "steamAppId=$(cat depots.json | jq -rcM '.${{ matrix.depotId }}.steamAppId' | tr -d '\n\r')" >> $GITHUB_OUTPUT
+          echo "manifestId=$(cat depots.json | jq -rcM '.${{ matrix.depotId }}.manifestId' | tr -d '\n\r')" >> $GITHUB_OUTPUT
       - run: mkdir -p maFiles
       - uses: mobiledevops/secret-to-file-action@v1
         with:
@@ -75,9 +76,9 @@ jobs:
           build-args: |
             STEAM_USERNAME=${{ secrets.STEAM_USERNAME }}
             STEAM_PASSWORD=${{ secrets.STEAM_PASSWORD }}
-            GAME=${{ matrix.game }}
+            GAME=${{ steps.depot.outputs.game }}
             STEAM_APP_ID=${{ steps.depot.outputs.steamAppId }}
-            DEPOT_ID=${{ steps.depot.outputs.depotId }}
+            DEPOT_ID=${{ matrix.depotId }}
             MANIFEST_ID=${{ steps.depot.outputs.manifestId }}
           secret-files: |
             maFile=maFiles/steam.maFile
@@ -86,5 +87,5 @@ jobs:
           file: ./Dockerfile
           push: ${{ github.event_name == 'push' }}
           #tags: ${{ steps.meta.outputs.tags }}
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ matrix.game }}-latest, ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ matrix.game }}-${{ steps.depot.outputs.depotId }}-${{ steps.depot.outputs.manifestId }}
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.depot.outputs.game }}-${{ steps.depot.outputs.manifestName }}-latest, ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.depot.outputs.game }}-${{ matrix.depotId }}-${{ steps.depot.outputs.manifestId }}
           labels: ${{ steps.meta.outputs.labels }}

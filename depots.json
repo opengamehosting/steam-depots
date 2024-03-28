@@ -1,9 +1,10 @@
 {
-  "valheim": {
+  "896661": {
+    "name": "valheim",
     "game": "valheim",
     "steamAppId": "896660",
-    "depotId": "1006",
+    "depotId": "896661",
     "manifest": "public",
-    "manifestId": "4884950798805348056"
+    "manifestId": "252049227837324070"
   }
 }
