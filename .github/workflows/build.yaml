@@ -1,0 +1,46 @@
+# Triggers the workflow on push or pull request events
+name: Build
+on:
+  push:
+    branches:
+      - master
+permissions: read-all
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v1
+        with:
+          fetch-depth: 0
+      - name: Setup bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: 1.0.15
+      - name: Validate JSON files
+        run: |
+          find . -name "*.json" | xargs -L1 bunx jsonlint@1.6.3 --quiet --compact
+  builder:
+    name: Builder
+    runs-on: self-hosted
+    strategy:
+      matrix:
+        game:
+          - valheim
+      fail-fast: false
+      max-parallel: 1
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+      - id: depot_manifest
+        uses: ActionsTools/read-json-action@main
+        with:
+          file_path: "depots.json"
+          prop_path: "${{ matrix.game }}"
+      - id: depot
+        run: |
+          echo "steamAppId=${steps.repository_type.outputs.value.steamAppId}" >> $GITHUB_OUTPUT
+      - run: echo "${{ steps.depot.steamAppId }}"
