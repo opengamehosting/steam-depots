@@ -45,11 +45,11 @@ jobs:
           force: false
       - id: depot
         run: |
-          echo "game=$(cat depots.json | jq -rcM '.${{ matrix.depotId }}.game' | tr -d '\n\r')" >> $GITHUB_OUTPUT
-          echo "manifest=$(cat depots.json | jq -rcM '.${{ matrix.depotId }}.manifest' | tr -d '\n\r')" >> $GITHUB_OUTPUT
-          echo "manifestName=$(cat depots.json | jq -rcM '.${{ matrix.depotId }}.name' | tr -d '\n\r')" >> $GITHUB_OUTPUT
-          echo "steamAppId=$(cat depots.json | jq -rcM '.${{ matrix.depotId }}.steamAppId' | tr -d '\n\r')" >> $GITHUB_OUTPUT
-          echo "manifestId=$(cat depots.json | jq -rcM '.${{ matrix.depotId }}.manifestId' | tr -d '\n\r')" >> $GITHUB_OUTPUT
+          echo "game=$(cat depots.json | jq -rcM '.["${{ matrix.depotId }}"].game' | tr -d '\n\r')" >> $GITHUB_OUTPUT
+          echo "manifest=$(cat depots.json | jq -rcM '.$["${{ matrix.depotId }}"].manifest' | tr -d '\n\r')" >> $GITHUB_OUTPUT
+          echo "manifestName=$(cat depots.json | jq -rcM '.$["${{ matrix.depotId }}"].name' | tr -d '\n\r')" >> $GITHUB_OUTPUT
+          echo "steamAppId=$(cat depots.json | jq -rcM '.$["${{ matrix.depotId }}"].steamAppId' | tr -d '\n\r')" >> $GITHUB_OUTPUT
+          echo "manifestId=$(cat depots.json | jq -rcM '.$["${{ matrix.depotId }}"].manifestId' | tr -d '\n\r')" >> $GITHUB_OUTPUT
       - run: mkdir -p maFiles
       - uses: mobiledevops/secret-to-file-action@v1
         with:
