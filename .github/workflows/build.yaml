@@ -46,6 +46,7 @@ jobs:
           echo "depotId=$(cat depots.json | jq -rcM '.${{ matrix.game }}.depotId' | tr -d '\n\r')" >> $GITHUB_OUTPUT
           echo "manifest=$(cat depots.json | jq -rcM '.${{ matrix.game }}.manifest' | tr -d '\n\r')" >> $GITHUB_OUTPUT
           echo "manifestId=$(cat depots.json | jq -rcM '.${{ matrix.game }}.manifestId' | tr -d '\n\r')" >> $GITHUB_OUTPUT
+      - run: mkdir -p maFiles
       - uses: mobiledevops/secret-to-file-action@v1
         with:
           base64-encoded-secret: ${{ secrets.MAFILE }}
