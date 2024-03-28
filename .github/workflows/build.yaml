@@ -64,9 +64,8 @@ jobs:
       - name: Log in to the Container registry
         uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
         with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          username: ${{ secrets.DOCKER_HUB_USER }}
+          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
       - name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
@@ -89,5 +88,5 @@ jobs:
           file: ./Dockerfile
           push: ${{ github.event_name == 'push' }}
           #tags: ${{ steps.meta.outputs.tags }}
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.depot.outputs.game }}-${{ steps.depot.outputs.manifestName }}-latest, ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.depot.outputs.game }}-${{ matrix.depotId }}-${{ steps.depot.outputs.manifestId }}
+          tags: opengamehosting/steam-depots:${{ steps.depot.outputs.game }}-${{ steps.depot.outputs.manifestName }}-latest, opengamehosting/steam-depots:${{ steps.depot.outputs.game }}-${{ matrix.depotId }}-${{ steps.depot.outputs.manifestId }}
           labels: ${{ steps.meta.outputs.labels }}
