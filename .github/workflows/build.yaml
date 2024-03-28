@@ -41,6 +41,46 @@ jobs:
           version: "1.7"
           force: false
       - id: depot
-        run: >
+        run: |
           echo "steamAppId=$(cat depots.json | jq -rcM '.${{ matrix.game }}.steamAppId' | tr -d '\n\r')" >> $GITHUB_OUTPUT
-      - run: echo "${{ steps.depot.outputs.steamAppId }}"
+          echo "depotId=$(cat depots.json | jq -rcM '.${{ matrix.game }}.depotId' | tr -d '\n\r')" >> $GITHUB_OUTPUT
+          echo "manifest=$(cat depots.json | jq -rcM '.${{ matrix.game }}.manifest' | tr -d '\n\r')" >> $GITHUB_OUTPUT
+          echo "manifestId=$(cat depots.json | jq -rcM '.${{ matrix.game }}.manifestId' | tr -d '\n\r')" >> $GITHUB_OUTPUT
+      - uses: mobiledevops/secret-to-file-action@v1
+        with:
+          base64-encoded-secret: ${{ secrets.MAFILE }}
+          filename: "maFiles/steam.maFile"
+      - uses: mobiledevops/secret-to-file-action@v1
+        with:
+          base64-encoded-secret: ${{ secrets.STEAM_GUARD_MANIFEST }}
+          filename: "maFiles/manifest.json"
+      - name: Log in to the Container registry
+        uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+      - name: Build and push Docker image
+        uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
+        with:
+          build-args: |
+            STEAM_USERNAME=${{ secrets.STEAM_USERNAME }}
+            STEAM_PASSWORD=${{ secrets.STEAM_PASSWORD }}
+            GAME=${{ matrix.game }}
+            STEAM_APP_ID=${{ steps.depot.outputs.steamAppId }}
+            DEPOT_ID=${{ steps.depot.outputs.depotId }}
+            MANIFEST_ID=${{ steps.depot.outputs.manifestId }}
+          secret-files: |
+            maFile=maFiles/steam.maFile
+            maManifest=maFiles/manifest.json
+          context: .
+          file: ./Dockerfile
+          push: ${{ github.event_name == 'push' && contains(github.ref, 'refs/tags/') }}
+          #tags: ${{ steps.meta.outputs.tags }}
+          tags: latest, ${{ matrix.game }}-${{ steps.depot.outputs.depotId }}-${{ steps.depot.outputs.manifestId }}
+          labels: ${{ steps.meta.outputs.labels }}
