@@ -17,5 +17,5 @@ RUN --mount=type=secret,id=maFile,target=/root/.config/steamguard-cli/maFiles/st
     +quit
 
 RUN rm -rf /opt/gameserver \
-  && ln -s /opt/steam/linux32/steamapps/content/app_$STEAM_APP_ID/depot_$DEPOT_ID/ /opt/gameserver 
+  && ln -s /opt/steam/linux32/steamapps/content/app_$STEAM_APP_ID/depot_$DEPOT_ID/ /opt/gameserver \
   && chown -R 1001:1001 /opt/gameserver
