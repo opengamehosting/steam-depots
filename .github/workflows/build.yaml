@@ -32,6 +32,9 @@ jobs:
           - valheim
       fail-fast: false
       max-parallel: 1
+    permissions:
+      contents: read
+      packages: write
     steps:
       - name: Check out the repo
         uses: actions/checkout@v4
