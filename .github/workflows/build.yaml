@@ -31,6 +31,7 @@ jobs:
       matrix:
         depotId:
           - 896661
+          - 2347773
       fail-fast: false
       max-parallel: 1
     permissions:
