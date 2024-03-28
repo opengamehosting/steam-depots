@@ -42,5 +42,6 @@ jobs:
           prop_path: "${{ matrix.game }}"
       - id: depot
         run: |
-          echo "steamAppId=${steps.repository_type.outputs.value.steamAppId}" >> $GITHUB_OUTPUT
+          echo "${{ steps.repository_type.outputs.value }}"
+          echo "steamAppId=${{ steps.repository_type.outputs.value.steamAppId }}" >> $GITHUB_OUTPUT
       - run: echo "${{ steps.depot.steamAppId }}"
