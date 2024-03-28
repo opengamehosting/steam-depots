@@ -35,13 +35,13 @@ jobs:
     steps:
       - name: Check out the repo
         uses: actions/checkout@v4
-      - id: depot_manifest
-        uses: ActionsTools/read-json-action@main
-        with:
-          file_path: "depots.json"
-          prop_path: "${{ matrix.game }}"
+       - name: Setup jq
+          uses: dcarbone/install-jq-action@v2
+          with:
+            version: '1.7'
+            force: false
       - id: depot
         run: |
-          echo "${{ steps.repository_type.outputs.value }}"
-          echo "steamAppId=${{ steps.repository_type.outputs.value.steamAppId }}" >> $GITHUB_OUTPUT
+          echo "steamAppId=$(cat depots.json | jq -rcM '.${{ matrix.game }}.steamAppId' | tr -d '\n\r')" >> $GITHUB_OUTPUT
       - run: echo "${{ steps.depot.steamAppId }}"
+    
