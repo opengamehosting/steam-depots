@@ -1,4 +1,4 @@
-# Triggers the workflow on push or pull request events
+---
 name: Build
 on:
   push:
@@ -21,7 +21,7 @@ jobs:
         with:
           bun-version: 1.0.15
       - name: Validate JSON files
-        run: |
+        run: >
           find . -name "*.json" | xargs -L1 bunx jsonlint@1.6.3 --quiet --compact
   builder:
     name: Builder
@@ -36,12 +36,12 @@ jobs:
       - name: Check out the repo
         uses: actions/checkout@v4
       - name: Setup jq
-          uses: dcarbone/install-jq-action@v2
-          with:
-            version: '1.7'
-            force: false
+        uses: dcarbone/install-jq-action@v2
+        with:
+          version: "1.7"
+          force: false
       - id: depot
-        run: |
-          echo "steamAppId=$(cat depots.json | jq -rcM '.${{ matrix.game }}.steamAppId' | tr -d '\n\r')" >> $GITHUB_OUTPUT
+        run: >
+          echo "steamAppId=$(cat depots.json | jq -rcM '.${{ matrix.game
+          }}.steamAppId' | tr -d '\n\r')" >> $GITHUB_OUTPUT
       - run: echo "${{ steps.depot.steamAppId }}"
-   
