@@ -1,7 +1,7 @@
 {
   "896661": {
-    "name": "valheim",
     "game": "valheim",
+    "name": "linux",
     "steamAppId": "896660",
     "depotId": "896661",
     "manifest": "public",
