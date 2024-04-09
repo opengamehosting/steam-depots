@@ -9,10 +9,18 @@
   },
   "2347770": {
     "game": "cs2",
-    "name": "linux",
+    "name": "base",
     "steamAppId": "730",
     "depotId": "2347770",
     "manifest": "public",
     "manifestId": "600974098216851346"
+  },
+  "2347773": {
+    "game": "cs2",
+    "name": "linux",
+    "steamAppId": "730",
+    "depotId": "2347773",
+    "manifest": "public",
+    "manifestId": "7645256265468642561"
   }
 }
